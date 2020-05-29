@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SweenaChat.API.Data;
 using SweenaChat.API.Models;
 using SweenaChat.API.ViewModels;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SweenaChat.API.Controllers
 {
@@ -50,6 +47,13 @@ namespace SweenaChat.API.Controllers
                   expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
                   signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
                 );
+
+                var payload = new JwtPayload
+           {
+               { "some ", "hello "},
+               { "scope", "http://dummy.com/"},
+           };
+
 
                 return Ok(
                   new

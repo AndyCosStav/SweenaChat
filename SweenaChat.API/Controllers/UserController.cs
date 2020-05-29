@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SweenaChat.API.Data;
 using SweenaChat.API.Models;
-using SweenaChat.API.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
