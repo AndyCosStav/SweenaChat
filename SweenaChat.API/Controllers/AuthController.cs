@@ -48,12 +48,6 @@ namespace SweenaChat.API.Controllers
                   signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256)
                 );
 
-                var payload = new JwtPayload
-           {
-               { "some ", "hello "},
-               { "scope", "http://dummy.com/"},
-           };
-
 
                 return Ok(
                   new
