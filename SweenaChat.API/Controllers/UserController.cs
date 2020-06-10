@@ -37,6 +37,14 @@ namespace SweenaChat.API.Controllers
 
         }
 
+        [Route("getuserbyname")]
+        [HttpGet]
+        public async Task <User> GetByUserName(string username)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Username == username);
+        }
+
+
         [Route("GetUserMessagesById")]
         [HttpGet]
         public async Task <User> GetUserMessagesByIds([FromQuery] int id)
