@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SweenaChat.API.Data;
+using SweenaChat.API.Hubs;
 using System.Text;
 
 namespace SweenaChat.API
@@ -57,6 +58,7 @@ namespace SweenaChat.API
             });
 
             services.AddControllers();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +82,7 @@ namespace SweenaChat.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

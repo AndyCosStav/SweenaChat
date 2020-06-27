@@ -1,25 +1,44 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using SweenaChat.API.Data;
+using SweenaChat.API.Hubs;
 using SweenaChat.API.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SweenaChat.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MessageController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
+        private IHubContext<ChatHub> _chat;
 
-        public MessageController(ApplicationDbContext dbContext)
+        public MessageController(ApplicationDbContext dbContext, IHubContext<ChatHub> chat)
         {
             _dbContext = dbContext;
+            _chat = chat;
         }
+
+        [Route("GetAllMessages")]
+        [HttpGet]
+        public async Task<List<Message>> GetAllMessages(string user)
+        {
+            var messages = _dbContext.Messages
+                .Where(x => x.Receiver == user || x.Sender == user).ToListAsync();
+
+            return await messages;
+        }
+
+
+
+
 
         [Route("GetConversation")]
         [HttpGet]
