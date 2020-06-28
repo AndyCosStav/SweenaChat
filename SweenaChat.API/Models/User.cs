@@ -16,6 +16,7 @@ namespace SweenaChat.API.Models
         public string LastName { get; set; }
 
         public ICollection<Message> Messages { get; set; } = new Collection<Message>();
+        public ICollection<Contact> Contacts { get; set; } = new Collection<Contact>();
 
     }
 }
