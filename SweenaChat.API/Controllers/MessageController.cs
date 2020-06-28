@@ -63,12 +63,18 @@ namespace SweenaChat.API.Controllers
 
             };
 
-            _dbContext.Messages.Add(newMessage);
+            var newContact = new Contact
+            {
+                Name = message.Receiver,
+                Owner = message.Sender
+            };
+
 
             var user = _dbContext.Users.Include(u => u.Messages).SingleOrDefault(x => x.Username == message.Sender);
 
             var contact = _dbContext.Contact.Include(u => u.Messages).SingleOrDefault(x => x.Name == message.Receiver);
 
+         
             if (user != null)
             {
                 if(contact != null)
@@ -76,22 +82,18 @@ namespace SweenaChat.API.Controllers
                     contact.Messages.Add(newMessage);
                     user.Messages.Add(newMessage);
 
-
                     await _dbContext.SaveChangesAsync();
 
                     return Ok(new { MessageContent = newMessage.MessageContent });
                 }
 
-                return NotFound("message was not sent ");
-                
+                return NotFound("Contact Not Added");
 
             }
 
             return NotFound();
 
-
         }
-
 
     }
 }

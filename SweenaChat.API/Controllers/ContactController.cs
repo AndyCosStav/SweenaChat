@@ -22,9 +22,44 @@ namespace SweenaChat.API.Controllers
         }
 
 
+        [Route("GetContactMessages")]
+        [HttpGet]
+        public async Task<ContactMessageViewModel> GetContactMessages(string username, string contactName)
+        {
+
+            ContactMessageViewModel MessagesList = new ContactMessageViewModel();
+
+            var messagesListUser = await _dbContext.Contact
+                .Include(m => m.Messages)
+                .Where(x =>
+                                     (x.Owner == username) && x.Name == contactName).ToListAsync();
+
+            var messagesListContact = await _dbContext.Contact
+                .Include(m => m.Messages)
+                .Where(x =>
+                                     (x.Owner == contactName) && x.Name == username).ToListAsync();
+
+            foreach (var message in messagesListContact)
+            {
+                foreach (var m in message.Messages)
+                {
+                    MessagesList.Messages.Add(m);
+                }
+            }
+
+            foreach (var message in messagesListUser)
+            {
+                foreach (var m in message.Messages)
+                {
+                    MessagesList.Messages.Add(m);
+                }
+            }
+
+            return MessagesList;
+
+        }
 
 
-        //if user / contact relationship already exists, throw error explaining so, DO NOT DUPLICATE RELATIONSHIP
         [Route("AddContact")]
         [HttpPost]
         public async Task<Contact> AddContact(string username, string contactName)
@@ -33,7 +68,8 @@ namespace SweenaChat.API.Controllers
 
             var contact = new Contact
             {
-                Name = contactName
+                Name = contactName,
+                Owner = username
             };
 
             user.Contacts.Add(contact);
