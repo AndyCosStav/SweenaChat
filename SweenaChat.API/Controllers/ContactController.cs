@@ -26,34 +26,13 @@ namespace SweenaChat.API.Controllers
         [HttpGet]
         public async Task<ContactMessageViewModel> GetContactMessages(string username, string contactName)
         {
-
             ContactMessageViewModel MessagesList = new ContactMessageViewModel();
 
-            var messagesListUser = await _dbContext.Contact
-                .Include(m => m.Messages)
-                .Where(x =>
-                                     (x.Owner == username) && x.Name == contactName).ToListAsync();
-
-            var messagesListContact = await _dbContext.Contact
-                .Include(m => m.Messages)
-                .Where(x =>
-                                     (x.Owner == contactName) && x.Name == username).ToListAsync();
-
-            foreach (var message in messagesListContact)
-            {
-                foreach (var m in message.Messages)
-                {
-                    MessagesList.Messages.Add(m);
-                }
-            }
-
-            foreach (var message in messagesListUser)
-            {
-                foreach (var m in message.Messages)
-                {
-                    MessagesList.Messages.Add(m);
-                }
-            }
+            var messages = await _dbContext.Contact
+                .Where(x => (x.Owner == username && x.Name == contactName) || (x.Owner == contactName && x.Name == username))
+                .SelectMany(m => m.Messages)
+                .ToListAsync();
+             MessagesList.Messages.AddRange(messages);
 
             return MessagesList;
 

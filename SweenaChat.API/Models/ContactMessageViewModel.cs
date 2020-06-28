@@ -8,6 +8,6 @@ namespace SweenaChat.API.Models
 {
     public class ContactMessageViewModel
     {
-        public ICollection<Message> Messages { get; set; } = new Collection<Message>();
+        public List<Message> Messages { get; set; } = new  List<Message>();
     }
 }
