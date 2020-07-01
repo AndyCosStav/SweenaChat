@@ -37,9 +37,6 @@ namespace SweenaChat.API.Controllers
         }
 
 
-
-
-
         [Route("GetConversation")]
         [HttpGet]
         public ActionResult GetConverstion([FromQuery] string user1, string user2 )
@@ -61,30 +58,42 @@ namespace SweenaChat.API.Controllers
             {
                 MessageContent = message.MessageContent,
                 DateCreated = DateTime.Now,
-                Sender = message.Sender, 
+                Sender = message.Sender,
                 Receiver = message.Receiver
 
             };
-            
-            _dbContext.Messages.Add(newMessage);
+
+            var newContact = new Contact
+            {
+                Name = message.Receiver,
+                Owner = message.Sender
+            };
+
 
             var user = _dbContext.Users.Include(u => u.Messages).SingleOrDefault(x => x.Username == message.Sender);
 
+            var contact = _dbContext.Contact.Include(u => u.Messages).SingleOrDefault(x => x.Name == message.Receiver);
+
+         
             if (user != null)
             {
-                user.Messages.Add(newMessage);
+                if(contact != null)
+                {
+                    contact.Messages.Add(newMessage);
+                    user.Messages.Add(newMessage);
 
+                    await _dbContext.SaveChangesAsync();
 
-                await _dbContext.SaveChangesAsync();
+                    return Ok(new { MessageContent = newMessage.MessageContent });
+                }
 
-                return Ok(new { MessageContent = newMessage.MessageContent });
+                return NotFound("Contact Not Added");
+
             }
 
             return NotFound();
 
-
         }
-
 
     }
 }

@@ -22,5 +22,7 @@ namespace SweenaChat.API.Data
         public DbSet<User> Users {get; set;}
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Contact> Contact { get; set; }
+
     }
 }
