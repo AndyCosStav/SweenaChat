@@ -21,6 +21,19 @@ namespace SweenaChat.API.Controllers
             _dbContext = dbContext;
         }
 
+        [Route("GetAllContactMessages")]
+        [HttpGet]
+        public async Task<List<Contact>> GetAllContactMessages(string username)
+        {
+            var contactMessages = await _dbContext.Contact
+              .Include(m => m.Messages)
+              .Where(u => u.Owner == username)
+              .ToListAsync();
+
+            return contactMessages;
+        }
+
+
 
         [Route("GetContactMessages")]
         [HttpGet]
